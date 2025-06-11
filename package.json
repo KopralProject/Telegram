@@ -1,0 +1,17 @@
+{
+  "name": "cloudflare-dns-bot",
+  "version": "1.0.0",
+  "description": "Telegram bot to manage Cloudflare wildcard DNS records.",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js"
+  },
+  "keywords": [],
+  "author": "Your Name",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^1.6.8",
+    "telegraf": "^4.16.1",
+    "dotenv": "^16.4.5"
+  }
+}
