@@ -1,0 +1,43 @@
+name: Point Cloudflare Wildcard DNS
+
+# Pemicu (Trigger)
+# workflow_dispatch memungkinkan kita menjalankan workflow ini secara manual dari tab Actions di GitHub
+on:
+  workflow_dispatch:
+    inputs:
+      target_ip:
+        description: 'Alamat IP Tujuan untuk Wildcard'
+        required: true
+        default: '192.0.2.1'
+
+jobs:
+  run-cloudflare-bot:
+    runs-on: ubuntu-latest
+    steps:
+      # Langkah 1: Checkout kode dari repositori
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      # Langkah 2: Setup environment Python
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      # Langkah 3: Install semua dependensi yang ada di requirements.txt
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      # Langkah 4: Jalankan skrip Python
+      # Rahasia (secrets) dari GitHub akan dimasukkan sebagai environment variable
+      - name: Run Cloudflare & Telegram Script
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_EMAIL: ${{ secrets.CLOUDFLARE_EMAIL }}
+          ZONE_NAME: ${{ secrets.ZONE_NAME }}
+          TARGET_IP: ${{ github.event.inputs.target_ip }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: python bot_script.py
