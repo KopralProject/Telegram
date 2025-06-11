@@ -1,0 +1,32 @@
+name: Deploy Cloudflare DNS Bot
+
+on:
+  push:
+    branches:
+      - main
+  # Optional: Anda bisa menambahkan jadwal jika ingin bot memeriksa sesuatu secara berkala
+  # schedule:
+  #   - cron: '0 * * * *' # Setiap jam
+
+jobs:
+  run-bot:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run Bot
+        run: node src/index.js
+        env:
+          BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          CLOUDFLARE_EMAIL: ${{ secrets.CLOUDFLARE_EMAIL }}
+          CLOUDFLARE_API_KEY: ${{ secrets.CLOUDFLARE_API_KEY }}
+          ALLOWED_USER_ID: ${{ secrets.TELEGRAM_ALLOWED_USER_ID }} # ID pengguna Telegram yang diizinkan
